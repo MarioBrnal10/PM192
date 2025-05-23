@@ -4,7 +4,7 @@ const personas = [
   { nombre: "María", edad: 28 }
 ];
 
-// 1. Buscar persona con nombre "Luis"
+// 1. Buscar persona
 const luis = personas.find(persona => persona.nombre === "Luis");
 console.log("Persona encontrada:", luis);
 

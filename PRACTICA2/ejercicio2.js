@@ -5,9 +5,9 @@ const productos = [
   { nombre: "Monitor", precio: 3000 }
 ];
 
-// Filtrar productos con precio > 1000 y mapear a nombres
+// Filtrar productos con precio > 1000 y mapear  nombres
 const nombres = productos
   .filter(producto => producto.precio > 1000)
   .map(producto => producto.nombre);
 
-console.log(nombres); // ["Laptop", "Monitor"]
+console.log(nombres); 
