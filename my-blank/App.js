@@ -1,59 +1,61 @@
 /* Zona 1: Importaciones */
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet, Text, View, Switch } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, Button, Alert, TouchableOpacity, Text, View, Image } from 'react-native';
 
 /* Zona 2: Main */
 export default function App() {
-  const [activarSwitch, setActwitch] = useState(false);
-  const [modoOscuro, setModoOscuro] = useState(false);
+  const [botonDesactivado, setBotonDesactivado] = useState(false);
+  const [contador, setContador] = useState(0);
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={[styles.contenedor, modoOscuro && styles.fondoOscuro]}>
-        <Text style={[styles.titulo, modoOscuro && styles.textoClaro]}>
-          Práctica con Switch
-        </Text>
+    <View style={styles.contenedor}>
+      {/* PRIMER BOTÓN */}
+      <Text style={styles.titulo}>PRIMER BOTÓN</Text>
+      <Text>El primer botón servirá para mandar un alert que lo único que dirá es "me presionaste"</Text>
+      <Button
+        title="Presióname"
+        color="#841584"
+        onPress={() => alert('Me presionaste =P')}
+      />
 
-        <View style={styles.opcion}>
-          <Text style={[styles.etiqueta, modoOscuro && styles.textoClaro]}>
-            Activar Switch
-          </Text>
-          <Switch
-            value={activarSwitch}
-            onValueChange={() => setActwitch(!activarSwitch)}
-            trackColor={{ false: '#ccc', true: '#4caf50' }}
-            thumbColor={activarSwitch ? '#ffffff' : '#999999'}
-          />
-        </View>
+      {/* SEGUNDO BOTÓN */}
+      <Text style={styles.titulo}>SEGUNDO BOTÓN</Text>
+      <Text>Se desactiva al presionarlo y no se vuelve a activar</Text>
+      <Button
+        title={botonDesactivado ? "Desactivado" : "Desactívame"}
+        disabled={botonDesactivado}
+        onPress={() => setBotonDesactivado(true)}
+        color="#2196F3"
+      />
 
-        <View style={styles.opcion}>
-          <Text style={[styles.etiqueta, modoOscuro && styles.textoClaro]}>
-            Modo Oscuro
-          </Text>
-          <Switch
-            value={modoOscuro}
-            onValueChange={() => setModoOscuro(!modoOscuro)}
-            disabled={!activarSwitch}
-            trackColor={
-              activarSwitch
-                ? { false: '#ff9999', true: '#ff3b30' }
-                : { false: '#ccc', true: '#4caf50' }
-            }
-            thumbColor={
-              activarSwitch
-                ? '#ff3b30'
-                : modoOscuro
-                ? '#ffffff'
-                : '#999999'
-            }
-          />
-        </View>
+      {/* TERCER BOTÓN (Justificados) */}
+      <Text style={styles.titulo}>TERCER BOTÓN</Text>
+      <Text>Botones justificados a izquierda y derecha</Text>
+      <View style={styles.botonJustificado}>
+        <Button title="Left button" color="#674323" onPress={() => {}} />
+        <Button title="Right button" color="#097865" onPress={() => {}} />
+      </View>
 
-        <StatusBar style={modoOscuro ? 'light' : 'dark'} />
-      </SafeAreaView>
-    </SafeAreaProvider>
+      {/* CUARTO BOTÓN (Contador con TouchableOpacity) */}
+      <Text style={styles.titulo}>BOTÓN CONTADOR</Text>
+      <Text>Cuenta las veces que fue presionado</Text>
+      <TouchableOpacity
+        style={styles.dynamicButton}
+        onPress={() => setContador(contador + 1)}
+      >
+        <Text style={styles.DynamicText}>{contador}</Text>
+      </TouchableOpacity>
+
+      {/* QUINTO BOTÓN (Pokebola) */}
+      <Text style={styles.titulo}>CUARTO BOTÓN</Text>
+      <Text>Al presionar la pokebola lanza un alert</Text>
+      <TouchableOpacity onPress={() => alert('La pokebola ha sido presionada')}>
+        <Image source={require('./assets/pokebola.png')} style={styles.imagen} />
+      </TouchableOpacity>
+
+      <StatusBar style="auto" />
+    </View>
   );
 }
 
@@ -64,10 +66,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 30,
     justifyContent: 'center',
+    gap: 20,
   },
   titulo: {
     fontSize: 24,
-    marginBottom: 40,
+    marginTop: 30,
+    marginBottom: 10,
     textAlign: 'center',
     fontWeight: 'bold',
   },
@@ -85,5 +89,26 @@ const styles = StyleSheet.create({
   },
   etiqueta: {
     fontSize: 18,
+  },
+  botonJustificado: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  dynamicButton: {
+    padding: 10,
+    marginTop: 10,
+    backgroundColor: '#987867',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  DynamicText: {
+    color: '#345676',
+    fontSize: 18,
+  },
+  imagen: {
+    width: 100,
+    height: 100,
+    alignSelf: 'center',
   },
 });
