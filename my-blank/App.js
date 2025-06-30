@@ -1,114 +1,158 @@
-/* Zona 1: Importaciones */
+/*Zona 1: Importaciones*/
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { StyleSheet, Button, Alert, TouchableOpacity, Text, View, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, Dimensions } from 'react-native';
 
-/* Zona 2: Main */
+/*Zona 2: Main*/
 export default function App() {
-  const [botonDesactivado, setBotonDesactivado] = useState(false);
-  const [contador, setContador] = useState(0);
+  const [nombres, setNombres] = useState([
+    'Polo', 'Mariam', 'Alexis', 'Mario', 'Mariano', 'Yahir', 'Miguel',
+    'Jorge', 'Hector', 'Jose', 'Luis'
+  ]);
+
+  const [nuevoNombre, setNuevoNombre] = useState('');
+  const [contenHeight, setContenHeight] = useState(0);
+  const [scrollY, setScrollY] = useState(0);
+  const [scrollHeight, setScrollHeight] = useState(0);
+
+  const handleScroll = (event) => {
+    setScrollY(event.nativeEvent.contentOffset.y);
+  };
+
+  const agregarNombre = () => {
+    const nombreTrimmed = nuevoNombre.trim();
+    if (nombreTrimmed.length > 0) {
+      setNombres([...nombres, nombreTrimmed]);
+      setNuevoNombre('');
+    }
+  };
+
+  // Cálculo de la barra de desplazamiento
+  const scrollbarVisible = contenHeight > scrollHeight;
+  const scrollbarHeight = scrollHeight / contenHeight * scrollHeight;
+  const scrollbarPosition = scrollY / contenHeight * scrollHeight;
 
   return (
-    <View style={styles.contenedor}>
-      {/* PRIMER BOTÓN */}
-      <Text style={styles.titulo}>PRIMER BOTÓN</Text>
-      <Text>El primer botón servirá para mandar un alert que lo único que dirá es "me presionaste"</Text>
-      <Button
-        title="Presióname"
-        color="#841584"
-        onPress={() => alert('Me presionaste =P')}
-      />
+    <View style={styles.container}>
+      <Text style={styles.titulo}>Pase De Lista</Text>
 
-      {/* SEGUNDO BOTÓN */}
-      <Text style={styles.titulo}>SEGUNDO BOTÓN</Text>
-      <Text>Se desactiva al presionarlo y no se vuelve a activar</Text>
-      <Button
-        title={botonDesactivado ? "Desactivado" : "Desactívame"}
-        disabled={botonDesactivado}
-        onPress={() => setBotonDesactivado(true)}
-        color="#2196F3"
-      />
-
-      {/* TERCER BOTÓN (Justificados) */}
-      <Text style={styles.titulo}>TERCER BOTÓN</Text>
-      <Text>Botones justificados a izquierda y derecha</Text>
-      <View style={styles.botonJustificado}>
-        <Button title="Left button" color="#674323" onPress={() => {}} />
-        <Button title="Right button" color="#097865" onPress={() => {}} />
+      <View style={styles.inputRow}>
+        <TextInput
+          style={styles.input}
+          placeholder="Ingrese un nombre"
+          placeholderTextColor="#012677"
+          value={nuevoNombre}
+          onChangeText={setNuevoNombre}
+          onSubmitEditing={agregarNombre}
+          returnKeyType='done'
+        />
+        <TouchableOpacity style={styles.btnAgregar} onPress={agregarNombre}>
+          <Text style={styles.btnAgregarTexto}>Agregar</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* CUARTO BOTÓN (Contador con TouchableOpacity) */}
-      <Text style={styles.titulo}>BOTÓN CONTADOR</Text>
-      <Text>Cuenta las veces que fue presionado</Text>
-      <TouchableOpacity
-        style={styles.dynamicButton}
-        onPress={() => setContador(contador + 1)}
+      <View
+        style={styles.scrollWrapper}
+        onLayout={(event) => setScrollHeight(event.nativeEvent.layout.height)}
       >
-        <Text style={styles.DynamicText}>{contador}</Text>
-      </TouchableOpacity>
+        <ScrollView
+          style={styles.scrollArea}
+          onContentSizeChange={(w, h) => setContenHeight(h)}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          showsVerticalScrollIndicator={false}
+        >
+          {nombres.map((nombre, index) => (
+            <View key={index} style={styles.item}>
+              <Text style={styles.texto}>{nombre}</Text>
+            </View>
+          ))}
+        </ScrollView>
 
-      {/* QUINTO BOTÓN (Pokebola) */}
-      <Text style={styles.titulo}>CUARTO BOTÓN</Text>
-      <Text>Al presionar la pokebola lanza un alert</Text>
-      <TouchableOpacity onPress={() => alert('La pokebola ha sido presionada')}>
-        <Image source={require('./assets/pokebola.png')} style={styles.imagen} />
-      </TouchableOpacity>
-
-      <StatusBar style="auto" />
+        {/* Barra de desplazamiento personalizada */}
+        {scrollbarVisible && (
+          <View
+            style={[
+              styles.scrollBar,
+              { height: scrollbarHeight, top: scrollbarPosition }
+            ]}
+          />
+        )}
+      </View>
     </View>
   );
 }
 
-/* Zona 3: Estilos */
+/*Zona 3: Estilos*/
 const styles = StyleSheet.create({
-  contenedor: {
+  container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingHorizontal: 30,
-    justifyContent: 'center',
-    gap: 20,
+    backgroundColor: '#fff', // Fondo blanco
+    paddingTop: 50,
+    paddingHorizontal: 20,
   },
   titulo: {
     fontSize: 24,
-    marginTop: 30,
-    marginBottom: 10,
+    fontWeight: 'bold',
+    color: '#012677',
+    marginBottom: 15,
     textAlign: 'center',
+  },
+  inputRow: {
+    flexDirection: 'row',
+    marginBottom: 15,
+  },
+  input: {
+    flex: 1,
+    backgroundColor: '#E0E8F9',
+    color: '#012677',
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    height: 45,
+    marginRight: 10,
+  },
+  btnAgregar: {
+    backgroundColor: '#012677',
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 45,
+  },
+  btnAgregarTexto: {
+    color: '#fff',
     fontWeight: 'bold',
   },
-  fondoOscuro: {
-    backgroundColor: '#1a1a1a',
+  scrollWrapper: {
+    position: 'relative',
+    height: 500,
   },
-  textoClaro: {
-    color: '#ffffff',
-  },
-  opcion: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  etiqueta: {
-    fontSize: 18,
-  },
-  botonJustificado: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 10,
-  },
-  dynamicButton: {
+  scrollArea: {
+    backgroundColor: '#E0E8F9',
+    borderRadius: 12,
     padding: 10,
-    marginTop: 10,
-    backgroundColor: '#987867',
-    borderRadius: 5,
-    alignItems: 'center',
+    height: 500,
+    borderWidth: 1,
+    borderColor: '#012677',
   },
-  DynamicText: {
-    color: '#345676',
+  item: {
+    backgroundColor: '#fff',
+    padding: 10,
+    marginBottom: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#012677',
+  },
+  texto: {
     fontSize: 18,
+    color: '#012677',
   },
-  imagen: {
-    width: 100,
-    height: 100,
-    alignSelf: 'center',
+  scrollBar: {
+    position: 'absolute',
+    right: 2,
+    width: 6,
+    backgroundColor: '#012677',
+    borderRadius: 3,
   },
 });
