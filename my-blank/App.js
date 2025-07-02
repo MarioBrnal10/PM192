@@ -1,114 +1,175 @@
-/* Zona 1: Importaciones */
+/*Zona 1: Importaciones*/
+import React, {useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { StyleSheet, Button, Alert, TouchableOpacity, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View,SectionList, FlatList, TouchableOpacity } from 'react-native';
 
-/* Zona 2: Main */
+
+/*Zona2: Main*/
 export default function App() {
-  const [botonDesactivado, setBotonDesactivado] = useState(false);
-  const [contador, setContador] = useState(0);
+
+//Estado para controlar que tipo de lista vamos a mostrar
+const [showFlatList, setShowFlatList] = useState(true);
+
+// Datos para SectionList - organizados en secciones con títulos
+  const [datosSeccionados, setDatosSeccionados] = useState([
+    {
+      title: 'Mensajes Destacados',
+      data: [
+        { id: '1', nombre: 'Ana', mensaje: '¡Hola!' },
+        { id: '2', nombre: 'Juan', mensaje: 'Salinas mató a Colosio.' },
+      ],
+    },
+    {
+      title: 'Mis Recordatorios',
+      data: [
+        { id: '3', nombre: 'Yo', mensaje: 'Comprar comida para la semana.' },
+        { id: '4', nombre: 'Yo', mensaje: 'Revisar el clima.' },
+        { id: '5', nombre: 'Yo', mensaje: 'Preocuparme por las tareas pendientes.' },
+      ],
+    },
+    {
+      title: 'Ideas para Proyectos',
+      data: [
+        { id: '6', nombre: 'Recetas', mensaje: 'App de recetas personalizadas.' },
+        { id: '7', nombre: 'Copia de notion', mensaje: 'Un rastreador de hábitos diario.' },
+      ],
+    },
+  ]);
+
+const [datosFlatList, setDatosFlatList] = useState([
+    { id: '1', nombre: 'María', mensaje: 'Buenos días a todos' },
+    { id: '2', nombre: 'Pedro', mensaje: 'Recordar la junta de mañana' },
+    { id: '3', nombre: 'Luis', mensaje: 'Enviar el reporte semanal' },
+    { id: '4', nombre: 'Carmen', mensaje: 'Revisar las tareas pendientes' },
+    { id: '5', nombre: 'Roberto', mensaje: 'Actualizar la documentación' },
+    { id: '6', nombre: 'Sofia', mensaje: 'Preparar presentación' },
+  ]);
+
+// Función para renderizar cada item individual
+  const renderItem = ({ item }) => (
+    <View style={styles.itemCard}>
+      <Text style={styles.itemNombre}>{item.nombre}</Text>
+      <Text style={styles.itemMensaje}>{item.mensaje}</Text>
+    </View>
+  )
+
+
 
   return (
-    <View style={styles.contenedor}>
-      {/* PRIMER BOTÓN */}
-      <Text style={styles.titulo}>PRIMER BOTÓN</Text>
-      <Text>El primer botón servirá para mandar un alert que lo único que dirá es "me presionaste"</Text>
-      <Button
-        title="Presióname"
-        color="#841584"
-        onPress={() => alert('Me presionaste =P')}
-      />
-
-      {/* SEGUNDO BOTÓN */}
-      <Text style={styles.titulo}>SEGUNDO BOTÓN</Text>
-      <Text>Se desactiva al presionarlo y no se vuelve a activar</Text>
-      <Button
-        title={botonDesactivado ? "Desactivado" : "Desactívame"}
-        disabled={botonDesactivado}
-        onPress={() => setBotonDesactivado(true)}
-        color="#2196F3"
-      />
-
-      {/* TERCER BOTÓN (Justificados) */}
-      <Text style={styles.titulo}>TERCER BOTÓN</Text>
-      <Text>Botones justificados a izquierda y derecha</Text>
-      <View style={styles.botonJustificado}>
-        <Button title="Left button" color="#674323" onPress={() => {}} />
-        <Button title="Right button" color="#097865" onPress={() => {}} />
-      </View>
-
-      {/* CUARTO BOTÓN (Contador con TouchableOpacity) */}
-      <Text style={styles.titulo}>BOTÓN CONTADOR</Text>
-      <Text>Cuenta las veces que fue presionado</Text>
-      <TouchableOpacity
-        style={styles.dynamicButton}
-        onPress={() => setContador(contador + 1)}
+    <View style={styles.container}>
+      {/* Barra de estado del dispositivo */}
+      <StatusBar barStyle="dark-content" /> 
+      
+      {/* Título dinámico que cambia según el tipo de lista */}
+      <Text style={styles.titulo}>{showFlatList ? 'Flat List' : 'Section List'}</Text>
+      
+      {/* Botón para alternar entre SectionList y FlatList */}
+      <TouchableOpacity 
+        style={styles.switchButton} 
+        onPress={() => setShowFlatList(!showFlatList)}
       >
-        <Text style={styles.DynamicText}>{contador}</Text>
+        <Text style={styles.switchButtonText}>
+          Cambiar a {showFlatList ? 'SectionList' : 'FlatList'}
+        </Text>
       </TouchableOpacity>
+      {showFlatList ? (
+        // Renderiza FlatList si showFlatList es true
+        <FlatList
+          data={datosFlatList}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          style={styles.list}
+          contentContainerStyle={styles.listContainer}
+        />
+      ) : (
+        // Renderiza SectionList si showFlatList es false
+        <SectionList
+          sections={datosSeccionados}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => item.id}
+          renderSectionHeader={({ section: { title } }) => (
+            <Text style={styles.sectionHeader}>{title}</Text>
+          )}
+          style={styles.list}
+          contentContainerStyle={styles.listContainer}
+        />
+      )
 
-      {/* QUINTO BOTÓN (Pokebola) */}
-      <Text style={styles.titulo}>CUARTO BOTÓN</Text>
-      <Text>Al presionar la pokebola lanza un alert</Text>
-      <TouchableOpacity onPress={() => alert('La pokebola ha sido presionada')}>
-        <Image source={require('./assets/pokebola.png')} style={styles.imagen} />
-      </TouchableOpacity>
-
-      <StatusBar style="auto" />
-    </View>
+      }
+      </View>
   );
 }
 
-/* Zona 3: Estilos */
+/*Zona 3: Estilos*/
 const styles = StyleSheet.create({
-  contenedor: {
+  container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingHorizontal: 30,
-    justifyContent: 'center',
-    gap: 20,
-  },
-  titulo: {
-    fontSize: 24,
-    marginTop: 30,
-    marginBottom: 10,
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  fondoOscuro: {
-    backgroundColor: '#1a1a1a',
-  },
-  textoClaro: {
-    color: '#ffffff',
-  },
-  opcion: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  // Estilo del botón para cambiar entre listas
+  switchButton: {
+    backgroundColor: '#007bff',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
     marginBottom: 20,
   },
-  etiqueta: {
+  // Texto del botón de cambio
+  switchButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  // Estilo base para ambas listas
+  list: {
+    width: '100%', 
+  },
+  // Estilo del contenido interno de las listas
+  listContent: {
+    paddingBottom: 20, 
+  },
+  // Estilo de los headers de sección (SectionList)
+  sectionHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    backgroundColor: '#e0e0e0', 
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    marginTop: 15, 
+    color: '#222',
+  },
+  // Estilo de cada tarjeta individual
+  itemCard: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 15,
+    marginVertical: 5,
+    marginHorizontal: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  // Estilo del nombre en cada item
+  itemNombre: {
     fontSize: 18,
+    fontWeight: 'bold',
+    color: '#007bff',
+    marginBottom: 5,
   },
-  botonJustificado: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 10,
-  },
-  dynamicButton: {
-    padding: 10,
-    marginTop: 10,
-    backgroundColor: '#987867',
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  DynamicText: {
-    color: '#345676',
-    fontSize: 18,
-  },
-  imagen: {
-    width: 100,
-    height: 100,
-    alignSelf: 'center',
-  },
+  // Estilo del mensaje en cada item
+  itemMensaje: {
+    fontSize: 16,
+    color: '#555',
+  },
+
+
+
+
 });
