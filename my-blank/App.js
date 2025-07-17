@@ -1,10 +1,19 @@
-/* Zona 1: Importaciones */
+/*Zona 1: Importaciones*/
 import { StatusBar } from 'expo-status-bar';
+<<<<<<< Updated upstream
 import { useState } from 'react';
 import { StyleSheet, Button, Alert, TouchableOpacity, Text, View, Image } from 'react-native';
+=======
+import { StyleSheet, Text, View, Button, Alert, TouchableOpacity, Image } from 'react-native';
+import React, {useState} from 'react';
+>>>>>>> Stashed changes
 
-/* Zona 2: Main */
+
+
+
+/*Zona2: Main*/
 export default function App() {
+<<<<<<< Updated upstream
   const [botonDesactivado, setBotonDesactivado] = useState(false);
   const [contador, setContador] = useState(0);
 
@@ -55,12 +64,23 @@ export default function App() {
       </TouchableOpacity>
 
       <StatusBar style="auto" />
+=======
+  return (
+    <View >
+      <Button
+      title='Presiona Aqui'
+      color= '#841584'>
+      onPress={() =>alert('Boton Presionado')}
+
+      </Button>
+>>>>>>> Stashed changes
     </View>
   );
 }
 
-/* Zona 3: Estilos */
+/*Zona 3: Estilos*/
 const styles = StyleSheet.create({
+<<<<<<< Updated upstream
   contenedor: {
     flex: 1,
     backgroundColor: '#fff',
@@ -84,12 +104,25 @@ const styles = StyleSheet.create({
   opcion: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
+=======
+  contenedor:{
+    flexdirection: 'row',
+    justifyContent: 'space-around',
+
   },
-  etiqueta: {
+
+  Boton:{
+    marginTop: 10,
+>>>>>>> Stashed changes
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+  },
+
+  TextoBoton:{
+    color: 'black',
     fontSize: 18,
   },
+<<<<<<< Updated upstream
   botonJustificado: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -112,3 +145,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 });
+=======
+
+  Imagen:{
+    width: 100,
+    height: 100,
+    marginTop: 20,
+  },
+});
+>>>>>>> Stashed changes
