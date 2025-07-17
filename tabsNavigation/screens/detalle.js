@@ -1,17 +1,17 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-export default function Profile({ navigation }) {
+export default function Detalle({ navigation }) {
   return (
     <View style={styles.container}>
-      <Ionicons name="person-outline" size={28} color="green" />
-      <Text style={styles.title}>Perfil de usuario</Text>
+      <Ionicons name="information-circle-outline" size={28} color="#007BFF" />
+      <Text style={styles.title}>Detalle del usuario</Text>
 
       <Pressable
-        style={[styles.button, { backgroundColor: '#007BFF' }]}
-        onPress={() => navigation.navigate('Detalle')}
+        style={[styles.button, { backgroundColor: '#28a745' }]}
+        onPress={() => navigation.goBack()}
       >
-        <Text style={styles.buttonText}>Detalles de usuario</Text>
+        <Text style={styles.buttonText}>Volver a perfil</Text>
       </Pressable>
     </View>
   );
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     marginVertical: 20,
-    color: 'green',
+    color: '#007BFF',
   },
   button: {
     marginTop: 20,
@@ -40,6 +40,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600',
-  },
+    fontWeight: '600',
+  },
 });
